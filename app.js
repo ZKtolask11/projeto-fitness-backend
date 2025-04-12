@@ -4,13 +4,12 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Corrigido para uso no Render
 
-// Conecta ao MongoDB (aqui você pode usar a string do Atlas ou manter o local para testes)
-mongoose.connect('mongodb://127.0.0.1:27017/exerciciosDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+// Conexão com MongoDB Atlas via variável de ambiente
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/exerciciosDB';
+
+mongoose.connect(MONGODB_URI)
   .then(() => console.log('✅ Conectado ao MongoDB'))
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
@@ -41,5 +40,6 @@ app.get('/api/exercises', async (req, res) => {
 
 // Inicia o servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
+
